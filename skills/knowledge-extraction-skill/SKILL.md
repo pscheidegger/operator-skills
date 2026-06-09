@@ -4,6 +4,8 @@
 
 Transform transient information into durable knowledge.
 
+This skill is the first step in multi-skill workflows. It runs before `integration-candidate-skill` and `action-first-skill`.
+
 ## Use When
 
 - Chat analysis
@@ -54,9 +56,25 @@ create-task
 create-candidate
 update-existing
 
+```text
+extraction_decision: discard
+→ no file
+→ no integration candidate
+```
+
+```text
+extraction_decision: update-existing
+→ use integration-candidate-skill
+```
+
+```text
+extraction_decision: create-candidate
+→ use integration-candidate-skill
+```
+
 ## Existing Note Check
 
-If relevant knowledge already exists, prefer update-existing and use the Integration Candidate Skill.
+If relevant knowledge already exists, prefer `update-existing` and use the `integration-candidate-skill`.
 
 ## Output Order
 
@@ -66,3 +84,11 @@ If relevant knowledge already exists, prefer update-existing and use the Integra
 4. Architecture
 5. Workflows
 6. References
+
+## Shared Metadata
+
+When this skill generates files, prefer setting:
+
+```yaml
+generated_by_skill: knowledge-extraction-skill
+```

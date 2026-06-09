@@ -6,6 +6,8 @@ Protect durable knowledge by turning proposed updates into reviewable integratio
 
 This skill is a governance workflow for knowledge bases, documentation repositories, task backlogs, architecture notes, and agent-managed Markdown systems.
 
+It is typically used after `knowledge-extraction-skill` and before `action-first-skill`.
+
 ## Use When
 
 - A target note already exists.
@@ -54,6 +56,7 @@ AGENTS-2026-06-09-1450.md
 type: integration-candidate
 status: proposed
 candidate_type: knowledge-update
+generated_by_skill: knowledge-extraction-skill
 
 target_note: [[target]]
 target_path: path/to/target.md
@@ -182,3 +185,19 @@ allow_direct_modification: true
 ```
 
 If this field is missing or false, create an integration candidate.
+
+When used together with `knowledge-extraction-skill`:
+
+- Do not create a candidate when `extraction_decision: discard`.
+- Prefer a candidate for `extraction_decision: update-existing` unless `allow_direct_modification: true` is explicitly set.
+- Candidates created from other skills should set `generated_by_skill` to either a single skill name or a list:
+
+```yaml
+generated_by_skill: knowledge-extraction-skill
+```
+
+```yaml
+generated_by_skill:
+  - knowledge-extraction-skill
+  - integration-candidate-skill
+```

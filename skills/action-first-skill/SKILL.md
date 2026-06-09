@@ -4,6 +4,8 @@
 
 Transform responses into action-oriented outputs that maximize progress and reduce unnecessary explanation.
 
+This skill is the last step in multi-skill workflows. It runs after `knowledge-extraction-skill` and `integration-candidate-skill` have made the knowledge and governance decisions.
+
 ## Use When
 
 - Project execution
@@ -30,6 +32,7 @@ Transform responses into action-oriented outputs that maximize progress and redu
 8. End with exactly one next action.
 9. Avoid motivational filler.
 10. Avoid generic closings.
+11. Do not change the underlying knowledge or integration decisions made by other skills.
 
 ## Output Pattern
 
