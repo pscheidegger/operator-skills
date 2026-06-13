@@ -197,6 +197,89 @@ When multiple skills apply, use this order:
 3. `integration-candidate-skill`
 4. `action-first-skill`
 
+## File Naming Conventions
+
+### Download Strategy
+
+Download audio only by default:
+
+```bash
+yt-dlp -x --audio-format m4a
+```
+
+Do not download the full video unless explicitly requested.
+
+Reasons:
+
+- Audio is sufficient for transcription with Whisper
+- Reduces storage in `.tools/.temp/`
+- The original video remains accessible via the source URL
+
+Download the full video only when:
+
+- The user explicitly requests it
+- Visual content is relevant for analysis (diagrams, code, on-screen text)
+- The source may become unavailable and visual content is important
+
+---
+
+### Temporary Media Storage
+
+Store downloaded media files under:
+
+```text
+.tools/.temp/YYYY-MM-DD_<short-title>/
+```
+
+The date is the **download date**, not the publication date.
+The short-title is a human-readable slug derived from the content topic.
+
+Examples:
+
+```text
+.tools/.temp/2026-06-13_llm-counsel/
+.tools/.temp/2026-06-14_whisper-v3-benchmark/
+```
+
+Add `.tools/.temp/` to `.gitignore` to prevent binary and temporary files from being committed.
+
+### Media File Names
+
+Name individual media files as:
+
+```text
+<short-title>_<published-date>.<ext>
+```
+
+The published date is the original publication date of the source content.
+
+Examples:
+
+```text
+llm-counsel_2026-06-11.m4a
+llm-counsel_2026-06-11.info.json
+llm-counsel_2026-06-11.txt
+```
+
+### Transcript Note File Names
+
+Use the standard inbox naming convention for transcript Markdown notes:
+
+```text
+YYYY-MM-DD-HHmm_<short-title>.md
+```
+
+The timestamp is the processing or download time.
+
+Examples:
+
+```text
+2026-06-13-0822_llm-counsel-jannikhi.md
+2026-06-14-1030_whisper-v3-benchmark-openai.md
+```
+
+---
+
 ## Safety and Compliance
 
 Only process content that the user is allowed to access and use.
