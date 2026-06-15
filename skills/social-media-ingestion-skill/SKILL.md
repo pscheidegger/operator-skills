@@ -201,25 +201,46 @@ When multiple skills apply, use this order:
 
 ### Download Strategy
 
-Download audio only by default:
-
-```bash
-yt-dlp -x --audio-format m4a
-```
-
-Do not download the full video unless explicitly requested.
+Always download the full video including audio. Do not use audio-only mode unless explicitly requested.
 
 Reasons:
 
-- Audio is sufficient for transcription with Whisper
-- Reduces storage in `.tools/.temp/`
-- The original video remains accessible via the source URL
+- Visual content may be relevant for analysis (on-screen text, diagrams, demonstrations)
+- A local copy ensures content is available even if the source is taken down
+- ffmpeg is required and available via `imageio-ffmpeg`
 
-Download the full video only when:
+Default download command:
 
-- The user explicitly requests it
-- Visual content is relevant for analysis (diagrams, code, on-screen text)
-- The source may become unavailable and visual content is important
+```bash
+yt-dlp -f "bestvideo+bestaudio" --merge-output-format mp4 --cookies-from-browser firefox -o "<output-path>"
+```
+
+Audio-only mode is an **exception** and requires explicit user request:
+
+```bash
+yt-dlp -x --audio-format m4a --cookies-from-browser firefox -o "<output-path>"
+```
+
+### Video Quality
+
+Select quality based on use case:
+
+| Quality | yt-dlp flag | Use case |
+|---------|-------------|----------|
+| Best available (default) | `-f "bestvideo+bestaudio"` | Archiving, visual analysis, full quality |
+| Compressed 720p | `-f "bestvideo[height<=720]+bestaudio"` | Storage-conscious, transcription only |
+| Compressed 480p | `-f "bestvideo[height<=480]+bestaudio"` | Minimal storage, audio focus |
+| Audio only | `-x --audio-format m4a` | Exception – only on explicit request |
+
+Default output format: `mp4` (requires ffmpeg for stream merging).
+
+If ffmpeg is not available as a system command, use the bundled binary from `imageio-ffmpeg`:
+
+```bash
+python -c "import imageio_ffmpeg; print(imageio_ffmpeg.get_ffmpeg_exe())"
+```
+
+Pass the result via `--ffmpeg-location <path>` if needed.
 
 ---
 
