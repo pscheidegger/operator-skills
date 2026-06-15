@@ -142,6 +142,45 @@ Preserve content that contains:
 - implementation details
 - decisions
 - reusable examples
+- recipes and cooking instructions
+
+### Recipe Content
+
+Food and recipe content is never discarded.
+
+If the content contains a complete or partial recipe, apply:
+
+```yaml
+extraction_decision: create-knowledge
+```
+
+Store the extracted recipe as a knowledge note under:
+
+```text
+30-knowledge/rezepte/
+```
+
+Use this frontmatter for recipe notes:
+
+```yaml
+---
+type: knowledge
+status: active
+created: YYYY-MM-DD
+updated: YYYY-MM-DD
+source_url: <instagram-url>
+creator: <creator>
+tags:
+  - rezept
+  - kochen
+---
+```
+
+Include at minimum:
+
+- Zutaten (ingredients)
+- Zubereitung (preparation steps)
+- Quelle (source URL and creator)
 
 ## Output Structure
 
