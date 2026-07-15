@@ -17,8 +17,8 @@ Long explanations, tangents, and multiple competing options.
 
 - Current status
 - Clear steps
-- Concrete estimate
-- One next action
+- A supported estimate when useful
+- One next action when work remains
 
 ## Suitable For
 

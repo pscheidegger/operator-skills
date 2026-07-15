@@ -1,10 +1,15 @@
+---
+name: document-ingestion-skill
+description: Convert PDFs, office documents, HTML, plain text, or parser output into traceable, structured Markdown for downstream processing. Use when source material must be parsed, OCRed, normalized, or have tables and metadata preserved. Do not use when the input is already clean Markdown and no normalization is needed, or when the user only wants semantic knowledge extraction.
+---
+
 # Document Ingestion Skill
 
 ## Purpose
 
 Transform documents into structured Markdown that can be processed by downstream knowledge workflows.
 
-This skill handles ingestion, parsing and normalization. It does not decide durable knowledge by itself. After ingestion, use `knowledge-extraction-skill`.
+This skill handles ingestion, parsing and normalization. It does not decide whether content becomes a reference, knowledge note, task, or integration candidate. Use `knowledge-extraction-skill` after ingestion when a durable knowledge decision is needed.
 
 ## Use When
 
@@ -16,7 +21,7 @@ This skill handles ingestion, parsing and normalization. It does not decide dura
 ## Do Not Use When
 
 - The user only wants to store the original file.
-- The source is already clean Markdown.
+- The source is already clean Markdown and needs no normalization.
 - The task is pure knowledge extraction without document parsing.
 - The document contains secrets or private data that should not be processed.
 
@@ -68,7 +73,7 @@ Optional outputs:
 3. Preserve headings, lists, tables and source metadata.
 4. Do not treat parser output as final knowledge.
 5. Do not create durable knowledge directly from raw parser output.
-6. Pass the normalized Markdown to `knowledge-extraction-skill`.
+6. Pass normalized Markdown to `knowledge-extraction-skill` when the user wants analysis or durable knowledge.
 7. Preserve traceability to the source document.
 8. Keep original files separate from extracted knowledge.
 9. Do not create duplicate notes for the same source.
@@ -117,8 +122,6 @@ Use one of these values when documenting the result:
 ingestion_decision: discard
 ingestion_decision: convert-only
 ingestion_decision: pass-to-knowledge-extraction
-ingestion_decision: create-reference
-ingestion_decision: create-candidate
 ```
 
 ## Decision Rules
@@ -140,18 +143,6 @@ ingestion_decision: pass-to-knowledge-extraction
 ```
 
 Run `knowledge-extraction-skill` on the normalized Markdown.
-
-```text
-ingestion_decision: create-reference
-```
-
-Create or update a reference note for the source document.
-
-```text
-ingestion_decision: create-candidate
-```
-
-Create an integration candidate when the ingested document updates existing durable knowledge.
 
 ## Quality Checks
 

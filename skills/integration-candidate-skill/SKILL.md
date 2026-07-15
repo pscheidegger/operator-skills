@@ -1,3 +1,8 @@
+---
+name: integration-candidate-skill
+description: Create a focused, traceable proposal for updating an existing durable note, backlog, architecture document, or governance file when review is required. Use after an update-existing or create-candidate decision, or when repository rules require proposed changes instead of direct edits. Do not use for new standalone notes or when the user or repository explicitly authorizes a direct edit.
+---
+
 # Integration Candidate Skill
 
 ## Purpose
@@ -38,16 +43,18 @@ It is typically used after `knowledge-extraction-skill` and before `action-first
 ## Naming Pattern
 
 ```text
-<target>-YYYY-MM-DD-HHmm.md
+<target>_YYYY-MM-DD-HHmm.md
 ```
 
 Examples:
 
 ```text
-local-llms-2026-06-09-1430.md
-backlog-2026-06-09-1440.md
-AGENTS-2026-06-09-1450.md
+local-llms_2026-06-09-1430.md
+backlog_2026-06-09-1440.md
+AGENTS_2026-06-09-1450.md
 ```
+
+Use the target repository's naming convention when one exists. Use the underscore pattern above only as the portable fallback.
 
 ## Required Frontmatter
 
@@ -56,7 +63,8 @@ AGENTS-2026-06-09-1450.md
 type: integration-candidate
 status: proposed
 candidate_type: knowledge-update
-generated_by_skill: knowledge-extraction-skill
+generated_by_skill:
+  - integration-candidate-skill
 
 target_note: [[target]]
 target_path: path/to/target.md
@@ -178,22 +186,22 @@ merge_strategy: review-required
 
 ## Direct Modification Escape Hatch
 
-Only modify the target file directly if the user or repository rules explicitly allow it.
+Modify the target file directly when the user explicitly requests it or repository rules clearly authorize it. Otherwise create an integration candidate.
 
 ```yaml
 allow_direct_modification: true
 ```
 
-If this field is missing or false, create an integration candidate.
+The optional field is useful for automated handoffs. An explicit user instruction or repository rule takes precedence over a missing field.
 
 When used together with `knowledge-extraction-skill`:
 
 - Do not create a candidate when `extraction_decision: discard`.
 - Prefer a candidate for `extraction_decision: update-existing` unless `allow_direct_modification: true` is explicitly set.
-- Candidates created from other skills should set `generated_by_skill` to either a single skill name or a list:
+- Candidates must include `integration-candidate-skill` in `generated_by_skill`. Include upstream skills in the list when they materially contributed:
 
 ```yaml
-generated_by_skill: knowledge-extraction-skill
+generated_by_skill: integration-candidate-skill
 ```
 
 ```yaml

@@ -1,3 +1,8 @@
+---
+name: substance-guard
+description: Review or rewrite drafted content to remove filler, unsupported certainty, redundancy, fake completeness, and vague recommendations while preserving useful detail. Use as a quality gate before publishing, committing, sending, or saving AI-generated documentation, plans, research summaries, knowledge notes, messages, or technical explanations. Do not use as the primary source parser, knowledge classifier, or operational response formatter.
+---
+
 # SubstanceGuard
 
 **Tagline:** Less slop. More substance.
@@ -26,6 +31,13 @@ Use SubstanceGuard when reviewing, rewriting, or approving:
 - emails, messages, and long-form prose
 
 Use it especially before accepting AI-generated content as final, saving it into a knowledge base, publishing it, committing it, or sending it to another person.
+
+## When Not to Use
+
+- Source parsing, OCR, or transcription is still required.
+- The task is to classify whether information becomes knowledge, a reference, a task, or a candidate.
+- The user wants unchanged archival or verbatim preservation.
+- The only need is final operational response formatting.
 
 ## Core Principle
 
@@ -129,9 +141,9 @@ Return one of:
 
 Include required fixes for Revise or Reject.
 
-### Extract Mode
+### Extraction Quality Gate
 
-Use for knowledge-base or secondBrain workflows.
+Use after a knowledge-extraction workflow to review the proposed durable content. This mode does not replace `knowledge-extraction-skill` and must not change its storage decision.
 
 Return only durable, reusable knowledge. Remove:
 
@@ -185,6 +197,12 @@ Return:
 3. Main issues
 4. Required improvements
 5. Improved version, only if the fix is straightforward
+
+## Integration With Other Skills
+
+Apply SubstanceGuard after content and governance decisions are made. It may tighten the proposed wording, identify unsupported claims, or reject a weak draft, but it must not silently change extraction decisions, target paths, merge strategies, or repository rules.
+
+For operational work, apply `action-first-skill` after the quality gate.
 
 ## Style Target
 

@@ -21,9 +21,9 @@ Output:
 Decision:
 
 ```yaml
-ingestion_decision: create-reference
+ingestion_decision: pass-to-knowledge-extraction
 ```
 
 Workflow:
 
-Documents → Markdown → Reference Note
+Documents → Markdown → Knowledge Extraction → Reference Decision

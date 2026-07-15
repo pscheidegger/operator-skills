@@ -2,6 +2,15 @@
 
 All notable changes to SubstanceGuard should be documented in this file.
 
+## Unreleased
+
+Changed:
+
+- Added skill metadata for reliable discovery.
+- Defined explicit non-trigger cases and composition boundaries.
+- Reframed Extract Mode as a quality gate after knowledge extraction.
+- Added the repository-standard `README.md` and `examples/` structure.
+
 ## v0.1.0 - Initial skill draft
 
 Initial version of SubstanceGuard.

@@ -1,8 +1,13 @@
+---
+name: social-media-ingestion-skill
+description: Acquire accessible YouTube, Instagram, or podcast media, preserve source metadata, obtain subtitles or transcription, and prepare traceable Markdown for downstream knowledge extraction. Use when a social-media URL or media file must be transcribed or normalized before analysis. Do not use for watch-only, download-only, inaccessible, unauthorized, or policy-prohibited content.
+---
+
 # Social Media Ingestion Skill
 
 ## Purpose
 
-Transform social media content into durable, traceable knowledge.
+Transform social media content into traceable source material for knowledge extraction.
 
 This skill handles acquisition, metadata preservation, transcription and preparation for downstream knowledge extraction.
 
@@ -68,6 +73,7 @@ Version 1 supports:
 ```yaml
 source_type: youtube
 source_type: instagram
+source_type: podcast
 ```
 
 Future source types may include:
@@ -75,7 +81,6 @@ Future source types may include:
 ```yaml
 source_type: tiktok
 source_type: linkedin
-source_type: podcast
 source_type: x-video
 ```
 
@@ -146,19 +151,9 @@ Preserve content that contains:
 
 ### Recipe Content
 
-Food and recipe content is never discarded.
+Treat complete or partial recipes as potentially durable content and pass them to `knowledge-extraction-skill`. That skill owns the final extraction decision.
 
-If the content contains a complete or partial recipe, apply:
-
-```yaml
-extraction_decision: create-knowledge
-```
-
-Store the extracted recipe as a knowledge note under:
-
-```text
-30-knowledge/rezepte/
-```
+If a recipe becomes a knowledge note, follow the target repository's placement and naming rules. A repository may, for example, use a recipes folder under its knowledge area.
 
 Use this frontmatter for recipe notes:
 
@@ -168,11 +163,11 @@ type: knowledge
 status: active
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
-source_url: <instagram-url>
+source_url: <source-url>
 creator: <creator>
 tags:
-  - rezept
-  - kochen
+  - recipe
+  - cooking
 ---
 ```
 
@@ -234,31 +229,34 @@ When multiple skills apply, use this order:
 1. `social-media-ingestion-skill`
 2. `knowledge-extraction-skill`
 3. `integration-candidate-skill`
-4. `action-first-skill`
+4. `substance-guard` when a quality gate is useful
+5. `action-first-skill` for operational user-facing responses
 
 ## File Naming Conventions
 
 ### Download Strategy
 
-Always download the full video including audio. Do not use audio-only mode unless explicitly requested.
+Acquire only the media needed for the user's goal. Prefer subtitles or audio for transcription-only work. Download video when visual content matters or the user explicitly requests a local video copy.
 
 Reasons:
 
 - Visual content may be relevant for analysis (on-screen text, diagrams, demonstrations)
-- A local copy ensures content is available even if the source is taken down
-- ffmpeg is required and available via `imageio-ffmpeg`
+- A local copy may be useful when authorized and needed for the task
+- Full video consumes more storage and may require ffmpeg
 
-Default download command:
-
-```bash
-yt-dlp -f "bestvideo+bestaudio" --merge-output-format mp4 --cookies-from-browser firefox -o "<output-path>"
-```
-
-Audio-only mode is an **exception** and requires explicit user request:
+Example command for public media when video is required:
 
 ```bash
-yt-dlp -x --audio-format m4a --cookies-from-browser firefox -o "<output-path>"
+yt-dlp -f "bestvideo+bestaudio" --merge-output-format mp4 -o "<output-path>"
 ```
+
+Example command for authorized transcription-only work:
+
+```bash
+yt-dlp -x --audio-format m4a -o "<output-path>"
+```
+
+Use browser cookies only when access is legitimate, the user has authorized use of the signed-in session, and the task actually requires authentication. Do not expose or persist cookie data.
 
 ### Video Quality
 
@@ -266,10 +264,10 @@ Select quality based on use case:
 
 | Quality | yt-dlp flag | Use case |
 |---------|-------------|----------|
-| Best available (default) | `-f "bestvideo+bestaudio"` | Archiving, visual analysis, full quality |
+| Best available | `-f "bestvideo+bestaudio"` | Authorized archiving, visual analysis, full quality |
 | Compressed 720p | `-f "bestvideo[height<=720]+bestaudio"` | Storage-conscious, transcription only |
 | Compressed 480p | `-f "bestvideo[height<=480]+bestaudio"` | Minimal storage, audio focus |
-| Audio only | `-x --audio-format m4a` | Exception – only on explicit request |
+| Audio only | `-x --audio-format m4a` | Transcription when visuals are irrelevant |
 
 Default output format: `mp4` (requires ffmpeg for stream merging).
 
@@ -285,7 +283,7 @@ Pass the result via `--ffmpeg-location <path>` if needed.
 
 ### Temporary Media Storage
 
-Store downloaded media files under:
+Follow the target repository's temporary-file policy. When none exists, use an ignored temporary directory outside durable knowledge. A compatible repository may use:
 
 ```text
 .tools/.temp/YYYY-MM-DD_<short-title>/

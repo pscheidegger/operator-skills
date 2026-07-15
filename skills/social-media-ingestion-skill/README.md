@@ -1,6 +1,6 @@
 # Social Media Ingestion Skill
 
-A reusable skill for converting social media content into durable knowledge.
+A reusable skill for converting accessible social media content into traceable source Markdown for downstream knowledge extraction.
 
 ## Core Idea
 

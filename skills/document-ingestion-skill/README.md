@@ -8,7 +8,7 @@ Documents are not knowledge.
 
 Documents must first be normalized into structured Markdown.
 
-After ingestion, downstream skills determine whether the content becomes a reference, knowledge, task or integration candidate.
+After ingestion, `knowledge-extraction-skill` determines whether the content becomes a reference, knowledge note, task, update, or discard result.
 
 ## Workflow
 
@@ -21,7 +21,7 @@ Markdown
   ↓
 knowledge-extraction-skill
   ↓
-integration-candidate-skill
+integration-candidate-skill if an existing target needs review
   ↓
 action-first-skill
 ```
